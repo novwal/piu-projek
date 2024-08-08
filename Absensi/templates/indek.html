@@ -151,8 +151,6 @@
             console.log(datetimeElement);
             let attendanceElement = document.getElementById(`attendance_${id}_${type}`);
             console.log(attendanceElement);
-            let attendanceTypeElement = document.getElementById(`attendanceType_${id}_${type}`);
-            console.log(attendanceTypeElement);
 
             // Check if all required elements are found
             if (!userIdElement || !datetimeElement || !attendanceElement) {
@@ -163,7 +161,6 @@
             let userId = userIdElement.value;
             let datetime = datetimeElement.value;
             let attendance = attendanceElement.value;
-            let attendanceType = attendanceTypeElement.textContent.trim();
 
             // Basic validation (You can add more robust validation here)
             if (!userId || !datetime || !attendance) {
@@ -178,7 +175,6 @@
             formData.append('datetime', datetime);
             formData.append('check_type', type); // Pass type as check_type
             formData.append('attendance', attendance);
-            formData.append('attendance_type', attendanceType);
 
             fetch('../manage_record.php', {
                 method: 'POST',
@@ -186,7 +182,7 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`Network response was not ok    : ${response.status}`);
+                        throw new Error(`Network response was not ok: ${response.status}`);
                     }
                     return response.json();
                 })
@@ -198,12 +194,6 @@
                     }
                 })
                 .catch(error => console.error('Request failed:', error));
-
-                console.log('User ID:', userId);
-                console.log('Datetime:', datetime);
-                console.log('Attendance:', attendance);
-                console.log('Check Type:', type);
-                console.log('Attendance Type:', attendanceType);
         }
 
         function fetchRecords() {
@@ -324,58 +314,58 @@
                                 let isLateIn = isLate(new Date(record.datetime));
                                 let isLateOut = record.datetime_out ? '-' : '';
 
-                                // console.log(record.id);
                                 table += `<tr>
-                                            <td>${id}</td>
-                                            <td><input type="text" value="${record.user_id}" id="user_id_${record.id}_in" class="form-control"></td>
-                                            <td>${record.full_name}</td>
-                                            <td><input type="datetime-local" value="${formatDate(record.datetime)}" id="datetime_744_in" class="form-control"></td>
-                                            <td>Check In</td>
-                                            <td>
-                                                <select id="attendance_${record.id}_in" class="form-control">
-                                                    <option value="0" ${attendanceIn === '-' ? 'selected' : ''}>-</option>
-                                                    <option value="1" ${attendanceIn === 'Present' ? 'selected' : ''}>Present</option>
-                                                    <option value="2" ${attendanceIn === 'Dispen' ? 'selected' : ''}>Dispen</option>
-                                                    <option value="3" ${attendanceIn === 'Sakit' ? 'selected' : ''}>Sakit</option>
-                                                    <option value="4" ${attendanceIn === 'Alfa' ? 'selected' : ''}>Alfa</option>
-                                                </select>
-                                            </td>
-                                            <td id="attendanceType_744_in">${isLateIn}</td>
-                                            <td>
-                                                <button onclick="saveRecord(${record.id}, 'in')" class="btn btn-primary">
-                                                    <i class="fas fa-pen"></i>
-                                                </button>
-                                                <button onclick="deleteRecord(${record.id})" class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>`;
+    <td>${id}</td>
+    <td><input type="text" value="${record.user_id}" id="user_id_${record.id}_in" class="form-control"></td>
+    <td>${record.full_name}</td>
+    <td><input type="datetime-local" value="${formatDate(record.datetime)}" id="datetime_${record.id}" class="form-control"></td>
+    <td>Check In</td>
+    <td>
+        <select id="attendance_${record.id}_in" class="form-control">
+            <option value="0" ${attendanceIn === '-' ? 'selected' : ''}>-</option>
+            <option value="1" ${attendanceIn === 'Present' ? 'selected' : ''}>Present</option>
+            <option value="2" ${attendanceIn === 'Dispen' ? 'selected' : ''}>Dispen</option>
+            <option value="3" ${attendanceIn === 'Sakit' ? 'selected' : ''}>Sakit</option>
+            <option value="4" ${attendanceIn === 'Alfa' ? 'selected' : ''}>Alfa</option>
+        </select>
+    </td>
+    <td>${isLateIn}</td>
+    <td>
+        <button onclick="saveRecord(${record.id}, 'in')" class="btn btn-primary">
+            <i class="fas fa-pen"></i>
+        </button>
+        <button onclick="deleteRecord(${record.id})" class="btn btn-danger">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>`;
 
-                                        table += `<tr>
-                                            <td></td>
-                                            <td><input type="text" value="${record.user_id}" id="user_id_${record.id}_out" class="form-control"></td>
-                                            <td>${record.full_name}</td>
-                                            <td><input type="datetime-local" value="${formatDate(record.datetime_out || '')}" id="datetime_${record.id}_out" class="form-control"></td>
-                                            <td>Check Out</td>
-                                            <td>
-                                                <select id="attendance_${record.id}_out" class="form-control">
-                                                    <option value="0" ${attendanceOut === '-' ? 'selected' : ''}>-</option>
-                                                    <option value="1" ${attendanceOut === 'Present' ? 'selected' : ''}>Present</option>
-                                                    <option value="2" ${attendanceOut === 'Dispen' ? 'selected' : ''}>Dispen</option>
-                                                    <option value="3" ${attendanceOut === 'Sakit' ? 'selected' : ''}>Sakit</option>
-                                                    <option value="4" ${attendanceOut === 'Alfa' ? 'selected' : ''}>Alfa</option>
-                                                </select>
-                                            </td>
-                                            <td>${isLateOut}</td>
-                                            <td>
-                                                <button onclick="saveRecord(${record.id}, 'out')" class="btn btn-primary">
-                                                    <i class="fas fa-pen"></i>
-                                                </button>
-                                                <button onclick="deleteRecord(${record.id})" class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>`;
+table += `<tr>
+    <td></td>
+    <td><input type="text" value="${record.user_id}" id="user_id_${record.id}_out" class="form-control"></td>
+    <td>${record.full_name}</td>
+    <td><input type="datetime-local" value="${formatDate(record.datetime_out || '')}" id="datetime_${record.id}_out" class="form-control"></td>
+    <td>Check Out</td>
+    <td>
+        <select id="attendance_${record.id}_out" class="form-control">
+            <option value="0" ${attendanceOut === '-' ? 'selected' : ''}>-</option>
+            <option value="1" ${attendanceOut === 'Present' ? 'selected' : ''}>Present</option>
+            <option value="2" ${attendanceOut === 'Dispen' ? 'selected' : ''}>Dispen</option>
+            <option value="3" ${attendanceOut === 'Sakit' ? 'selected' : ''}>Sakit</option>
+            <option value="4" ${attendanceOut === 'Alfa' ? 'selected' : ''}>Alfa</option>
+        </select>
+    </td>
+    <td>${isLateOut}</td>
+    <td>
+        <button onclick="saveRecord(${record.id}, 'out')" class="btn btn-primary">
+            <i class="fas fa-pen"></i>
+        </button>
+        <button onclick="deleteRecord(${record.id})" class="btn btn-danger">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>`;
+
                             });
                         }
                     });

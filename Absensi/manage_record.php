@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : null;
     $id = isset($_POST['id']) ? intval($_POST['id']) : null;
 
-    if ($action === 'edit') {
+    if ($action === 'edit') {   
         $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : null;
         $datetime = isset($_POST['datetime']) ? $_POST['datetime'] : null;
         $attendance = isset($_POST['attendance']) ? $_POST['attendance'] : null;
